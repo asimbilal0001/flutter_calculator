@@ -21,12 +21,4 @@ List<String> btnList = [
   '=',
 ];
 
-List<String> operatorList = [
-  '%',
-  '/',
-  'X',
-  '-',
-  '+',
-  '=',
-  '√',
-];
+List<String> operatorList = ['/', 'X', '-', '+', '=', '%'];

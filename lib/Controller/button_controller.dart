@@ -1,12 +1,15 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_calculator/Model/button_list.dart';
-import 'package:math_expressions/math_expressions.dart';
 
 class ModelBtn extends GetxController {
-  RxString input = '0'.obs;
-  RxString output = '0'.obs;
-  // Parser p = Parser();
+  RxString input = ''.obs;
+  RxString output = ''.obs;
+  RxList<String> splittedList = [''].obs;
+  String operator = '';
+
   final myList = btnList;
   final myOperators = operatorList;
 
@@ -22,76 +25,84 @@ class ModelBtn extends GetxController {
     }
   }
 
-  void theOperations(int index, List<String> btnList) {
+  void operations(int index, List<String> btnList) {
     if (index == 0) {
       //Clear
-      input.value = '0';
-      output.value = '0';
+      input.value = '';
+      output.value = '';
     } else if (index == 1) {
       if (input.value.isEmpty) {
         return null;
       }
       input.value = input.substring(0, input.value.length - 1);
-    }
-    // else if (index == myList.length - 1) {
-    // input.value = input.value.replaceAll('X', '*');
-    // input.value = input.value.replaceAll('√', 'sqrt');
-
-    // // String outPutVar =
-    // Parser p = Parser();
-    // Expression exp = p.parse(input.value);
-    // ContextModel cm = ContextModel();
-    // double eval = exp.evaluate(EvaluationType.REAL, cm);
-
-    // output.value = eval.toString();
-    // }
-    else {
-      // input.value += btnList[index];
-      addInInput(btnList[index]);
-      replaceInInput(btnList[index]);
+    } else if (index == myList.length - 1) {
+      isOperatorExist(input.value, splittedList);
+      output.value = output.value;
+    } else {
+      updateOperatorInInput(myList[index]);
     }
   }
 
-  bool isOperator(String x) {
-    if (x == '%' ||
-        x == '/' ||
-        x == 'X' ||
-        x == '-' ||
-        x == '+' ||
-        x == '=' ||
-        x == '√') {
-      return true;
+  void updateOperatorInInput(String value) {
+    String lastCharacter =
+        input.isNotEmpty ? input.substring(input.value.length - 1) : '';
+
+    if (myOperators.contains(lastCharacter) && myOperators.contains(value)) {
+      input.value = input.value
+          .replaceRange(input.value.length - 1, input.value.length, '');
+    }
+    input.value += value;
+  }
+
+  bool isOperatorExist(String value, List<String> newList) {
+    for (String currentOperator in myOperators) {
+      if (value.contains(currentOperator)) {
+        newList = value.split(currentOperator);
+
+        String part1 = newList[0];
+        String part2 = newList[1];
+
+        double num1 = double.parse(part1);
+        double num2 = double.parse(part2);
+
+        switch (currentOperator) {
+          case "+":
+            output.value = (num1 + num2).toString();
+            break;
+          case "-":
+            output.value = (num1 - num2).toString();
+            break;
+          case "X":
+            output.value = (num1 * num2).toString();
+            break;
+          case "/":
+            output.value = (num1 / num2).toString();
+            break;
+          case "%":
+            output.value = {double.parse(newList[0]) / 100}.toString();
+            break;
+        }
+      }
     }
     return false;
   }
-
-  void addInInput(String value) {
-    if (input.value == '0' && myOperators.contains(value)) {
-      input.value = 'aaa $value';
-    }
-  }
-
-  void replaceInInput(String value) {
-    if (myOperators.contains(input.value)) {
-      input.value = value;
-    }
-  }
 }
+    
 
-//
 
-// void onPress(int index, List<String> btnList) {
-//   input.value += btnList[index];
-// }
 
-// void clearFunc(int index, List<String> btnList) {
-//   input.value = '';
-//   output.value = '';
-// }
 
-// void delFunc(int index, List<String> btnList) {
-//   if (input.value.isEmpty) {
-//     return null;
-//   }
-//   input.value = input.substring(0, input.value.length - 1);
-// }
+
+
+  // bool isOperator(String x) {
+  //   if (x == '%' ||
+  //       x == '/' ||
+  //       x == 'X' ||
+  //       x == '-' ||
+  //       x == '+' ||
+  //       x == '=' ||
+  //       x == '√') {
+  //     return true;
+  //   }
+  //   return false;
+  // }

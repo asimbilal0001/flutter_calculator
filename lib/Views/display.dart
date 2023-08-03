@@ -71,8 +71,7 @@ class _DisplayScreenState extends State<DisplayScreen> {
                       return Card(
                         child: CalButton(
                           buttonTapped: () {
-                            c.theOperations(index, c.myList);
-                            
+                            c.operations(index, c.myList);
                           },
                           btnColor: c.colorCondition(index),
                           btnText: c.myList[index],
@@ -87,17 +86,4 @@ class _DisplayScreenState extends State<DisplayScreen> {
       ),
     );
   }
-
-  // void eqlFunc() {
-  //   c.input.value = c.input.value.replaceAll('X', '*');
-  //   c.input.value = c.input.value.replaceAll('√', 'sqrt');
-
-  //   // String outPutVar =
-  //   Parser p = Parser();
-  //   Expression exp = p.parse(c.input.value);
-  //   ContextModel cm = ContextModel();
-  //   double eval = exp.evaluate(EvaluationType.REAL, cm);
-
-  //   c.output.value = eval.toString();
-  // }
 }
